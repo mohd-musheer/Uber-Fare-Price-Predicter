@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uber Fare Predictor</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#E8F3FF;
+    display:flex; justify-content:center; align-items:center;
+    height:100vh; margin:0;
+}
+.card{
+    background:white; padding:25px; border-radius:12px;
+    width:350px; box-shadow:0 0 15px rgba(0,0,0,0.2);
+}
+.card input{
+    width:100%; padding:10px; margin:8px 0;
+    border-radius:8px; border:1px solid #aaa;
+}
+button{
+    width:100%; padding:12px; background:#007bff;
+    color:white; border:none; border-radius:8px;
+    font-size:16px; margin-top:10px;
+    cursor:pointer;
+}
+button:hover{background:#005fcc;}
+
+#loader{
+    width:100%; height:6px; background:#ddd; border-radius:5px;
+    margin-top:10px; overflow:hidden; display:none;
+}
+#loader div{
+    width:0; height:100%; background:#007bff;
+    animation:loading 1.5s infinite;
+}
+@keyframes loading{
+    0%{width:0%;}
+    50%{width:80%;}
+    100%{width:0%;}
+}
+#result{
+    margin-top:15px; font-size:20px; font-weight:bold; color:#007bff;
+    text-align:center;
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+    <h2>🚕 Uber Fare Prediction</h2>
+
+    <input id="passenger_count" placeholder="Passenger Count" type="number" min="1">
+    <label>Select Date:</label>
+    <input id="date" type="date">
+
+    <label>Select Time:</label>
+    <input id="time" type="time">
+
+    <input id="distance_km" placeholder="Distance (km)" type="number">
+
+    <button onclick="predictFare()">Predict Fare</button>
+    
+    <div id="loader"><div></div></div>
+    <div id="result"></div>
+</div>
+
+
+<script>
+async function predictFare(){
+    document.getElementById("loader").style.display = "block";
+    document.getElementById("result").innerText = "";
+
+    const dateObj = new Date(document.getElementById("date").value);
+    const timeObj = document.getElementById("time").value.split(":");
+    const hour = Number(timeObj[0]);
+
+    const weekday = dateObj.getDay();
+    const month = dateObj.getMonth() + 1;
+    const year = dateObj.getFullYear();
+
+    const is_weekday = (weekday >= 1 && weekday <= 5) ? 1 : 0;
+    const is_night = (hour >= 22 || hour <= 5) ? 1 : 0;
+
+    const data = {
+        passenger_count: Number(passenger_count.value),
+        hour, weekday, month, year,
+        is_weekday, is_night,
+        distance_km: Number(distance_km.value)
+    };
+
+    const res = await fetch("https://uber-fare-price-predicter.onrender.com//predict", {
+        method:"POST",
+        headers:{ "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+    document.getElementById("loader").style.display = "none";
+
+    document.getElementById("result").innerText = "💰 Fare: $ " + result.predicted_fare;
+}
+</script>
+
+</body>
+</html>
