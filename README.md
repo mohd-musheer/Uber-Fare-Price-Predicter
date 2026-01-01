@@ -1,7 +1,10 @@
 # 🚕 Uber Fare Price Predictor (Machine Learning Project)
 
 Predict the taxi fare price based on ride details such as distance, passengers and time — similar to how Uber/Ola fare estimation works.
+Live Model test  : https://uber-fare-price-predicter.onrender.com
 
+
+API : https://uber-fare-price-predicter.onrender.com/predict
 This project uses:
 - **Python**
 - **Scikit-Learn**
@@ -48,3 +51,4 @@ This project uses:
 ---
 
 ## 📂 Project Structure
+
