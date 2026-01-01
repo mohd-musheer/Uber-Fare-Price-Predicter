@@ -3,6 +3,7 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 import joblib, pandas as pd
+from fastapi.responses import HTMLResponse
 
 app = FastAPI()
 
@@ -26,12 +27,13 @@ class DataModel(BaseModel):
     is_night: int
     distance_km: float
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 def home():
-    return FileResponse("index.html")
+    return open("index.html").read()
 
 @app.post("/predict")
 def predict(data: DataModel):
     df = pd.DataFrame([data.dict()])
     prediction = model.predict(df)[0]
     return {"predicted_fare": round(float(prediction), 2)}
+
