@@ -91,7 +91,7 @@ async function predictFare(){
         distance_km: Number(distance_km.value)
     };
 
-    const res = await fetch("https://uber-fare-price-predicter.onrender.com//predict", {
+    const res = await fetch("https://uber-fare-price-predicter.onrender.com/predict", {
         method:"POST",
         headers:{ "Content-Type": "application/json" },
         body: JSON.stringify(data)
@@ -106,3 +106,4 @@ async function predictFare(){
 
 </body>
 </html>
+
