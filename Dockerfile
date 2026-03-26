@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
+
 RUN pip install --no-cache-dir \
     fastapi uvicorn[standard] \
     scikit-learn pandas numpy \
@@ -22,3 +23,5 @@ COPY . .
 EXPOSE 8000
 
 CMD ["uvicorn", "uberAPI:app", "--host", "0.0.0.0", "--port", "8000"]
+
+
