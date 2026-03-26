@@ -27,9 +27,7 @@ class DataModel(BaseModel):
     is_night: int
     distance_km: float
 
-@app.get("/", response_class=HTMLResponse)
-def home():
-    return open("index.html").read()
+
 
 @app.post("/predict")
 def predict(data: DataModel):
@@ -37,3 +35,6 @@ def predict(data: DataModel):
     prediction = model.predict(df)[0]
     return {"predicted_fare": round(float(prediction), 2)}
 
+@app.get("/", response_class=HTMLResponse)
+def home():
+    return open("index.html").read()
