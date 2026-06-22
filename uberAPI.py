@@ -1,11 +1,14 @@
+from pathlib import Path
+
+import joblib
+import pandas as pd
 from fastapi import FastAPI
-from fastapi.responses import FileResponse
-from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
-import joblib, pandas as pd
 from fastapi.responses import HTMLResponse
+from pydantic import BaseModel
 
 app = FastAPI()
+BASE_DIR = Path(__file__).resolve().parent
 
 app.add_middleware(
     CORSMiddleware,
@@ -15,7 +18,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-model = joblib.load("UberFarePredictor.pkl")
+model = joblib.load(BASE_DIR / "UberFarePredictor.pkl")
+
 
 class DataModel(BaseModel):
     passenger_count: int
@@ -28,13 +32,13 @@ class DataModel(BaseModel):
     distance_km: float
 
 
-
 @app.post("/predict")
 def predict(data: DataModel):
-    df = pd.DataFrame([data.dict()])
+    df = pd.DataFrame([data.model_dump()])
     prediction = model.predict(df)[0]
     return {"predicted_fare": round(float(prediction), 2)}
 
+
 @app.get("/", response_class=HTMLResponse)
 def home():
-    return open("index.html").read()
+    return (BASE_DIR / "index.html").read_text(encoding="utf-8")
