@@ -1,0 +1,5 @@
+fastapi==0.138.0
+pandas==3.0.3
+joblib==1.5.3
+scikit-learn==1.9.0
+httpx==0.28.1
